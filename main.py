@@ -1,12 +1,28 @@
 import requests
 import math
-import bot
 import asyncio
 import config
+import logging
 from datetime import datetime as dt
 from aiogram import Bot, types, Dispatcher, F
 from aiogram.types import Message
 
+
+bot = Bot(config.BOT_TOKEN)
+dp = Dispatcher()
+
+async def start_bot():
+    logging.basicConfig(level=logging.INFO)
+    await bot.delete_webhook(drop_pending_updates=True)
+    await dp.start_polling(bot)
+
+@dp.message(F.text == "/start")
+async def start(message: Message):
+    await message.answer(f"Привет, {message.from_user.last_name} {message.from_user.first_name}!")
+    await message.answer(f"Напиши название города")
+
+async def send_weather(message: Message):
+    pass
 
 def get_weather(city, open_weather_api_key: config.OPEN_WEATHER_API_KEY):
     try:
@@ -51,5 +67,5 @@ def main():
     get_weather(city, config.OPEN_WEATHER_API_KEY)
 
 if __name__ == '__main__':
-    # asyncio.run(bot.start_bot())
-    main()
+    asyncio.run(start_bot())
+    # main()
