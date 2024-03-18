@@ -3,6 +3,7 @@ import math
 import asyncio
 import config
 import logging
+import time
 from datetime import datetime as dt
 from aiogram import Bot, types, Dispatcher, F
 from aiogram.types import Message
@@ -18,11 +19,18 @@ async def start_bot():
 
 @dp.message(F.text == "/start")
 async def start(message: Message):
-    await message.answer(f"Привет, {message.from_user.first_name}!")
-    await message.answer(f"Напиши название города")
+    print(message.from_user)
+    print(message.text)
+    ans_1 = await message.answer(f"Привет, {message.from_user.first_name}!")
+    ans_2 = await message.answer(f"Напиши название города")
+    print(ans_1.text)
+    print(ans_2.text)
 
 @dp.message()
 async def send_weather(message: Message):
+    print(f"{dt.now()}\n"
+          f"{message.from_user.username}")
+    print(message.text)
     req = requests.get(f"https://api.openweathermap.org/data/2.5/weather?"
                        f"q={message.text}"
                        f"&lang=ru"
@@ -50,11 +58,12 @@ async def send_weather(message: Message):
         cur_weather = request_data["weather"][0]["description"]
         cur_weather_capitalize = cur_weather.capitalize()
         cur_clouds = request_data["clouds"]["all"]
-
-        await message.answer(f"Текущая погода в городе {cur_city}\n"
+        weather_for_answer = (f"Текущая погода в городе {cur_city}:\n\n"
                              f"{cur_weather_capitalize}. Облачность: {cur_clouds}%\n"
-                             f"Температура: {cur_temp} C°, ощущается как {cur_feels_like} C°\n"
-                             f"Макс. температура: {cur_temp_max} C°. Мин. температура: {cur_temp_min} C°\n"
+                             f"Температура: {cur_temp} C°\n"
+                             f"Ощущается как {cur_feels_like} C°\n"
+                             f"Макс. температура: {cur_temp_max} C°\n"
+                             f"Мин. температура: {cur_temp_min} C°\n"
                              f"Влажность: {cur_humidity}%\n"
                              f"Давление {cur_pressure} мм.рт.ст.\n"
                              f"Восход в {cur_sunrise}\n"
@@ -62,8 +71,11 @@ async def send_weather(message: Message):
                              f"Продолжительность дня: {cur_day_len}\n\n"
                              f"Скорость ветра {cur_wind_speed} м/с, порывы до {cur_wind_gust} м/с"
                             )
+        ans = await message.answer(weather_for_answer)
+        print(ans.text)
     else:
-        await message.answer(f"Неверный город")
+        ans = await message.answer(f"Неверный город")
+        print(ans.text)
 
 # def get_weather(city, open_weather_api_key: config.OPEN_WEATHER_API_KEY):
 #     try:
