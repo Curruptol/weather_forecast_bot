@@ -11,10 +11,6 @@ import asyncio
 from aiogram import Bot, types, Dispatcher, F
 from aiogram.types import Message
 
-# .env
-# OPEN_WEATHER_API_KEY=72fee587f0dcc7e3080727edbab14177
-# BOT_TOKEN=7118094552:AAGliWxcky0ZC4QqXBXuvRxvUYkCrTPkzQc
-
 load_dotenv()
 bot = Bot(os.environ['BOT_TOKEN'])
 dp = Dispatcher()
@@ -54,7 +50,7 @@ def get_weather(city):
         cur_sunset = dt.time(cur_timestamp_sunset)
         cur_day_len = cur_timestamp_sunset - cur_timestamp_sunrise
         cur_wind_speed = request_data["wind"]["speed"]
-        cur_wind_gust = request_data["wind"]["gust"]
+        cur_wind_gust = request_data["wind"].get("gust")
         cur_weather = request_data["weather"][0]["description"]
         cur_weather_capitalize = cur_weather.capitalize()
         cur_clouds = request_data["clouds"]["all"]
@@ -69,7 +65,8 @@ def get_weather(city):
                               f"Восход в {cur_sunrise}\n"
                               f"Закат в {cur_sunset}\n"
                               f"Продолжительность дня: {cur_day_len}\n\n"
-                              f"Скорость ветра {cur_wind_speed} м/с, порывы до {cur_wind_gust} м/с"
+                              f"Скорость ветра {cur_wind_speed} м/с"
+                              f"{f', порывы до {cur_wind_gust} м / с' if cur_wind_gust is not None else ''}"
                               )
         return weather_for_answer
     else:
