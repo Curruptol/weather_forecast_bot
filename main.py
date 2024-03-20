@@ -1,15 +1,22 @@
 import requests
 import math
-import asyncio
-import config
 import logging
-import time
+
+import os
+from dotenv import load_dotenv
+
 from datetime import datetime as dt
+
+import asyncio
 from aiogram import Bot, types, Dispatcher, F
 from aiogram.types import Message
 
+# .env
+# OPEN_WEATHER_API_KEY=72fee587f0dcc7e3080727edbab14177
+# BOT_TOKEN=7118094552:AAGliWxcky0ZC4QqXBXuvRxvUYkCrTPkzQc
 
-bot = Bot(config.BOT_TOKEN)
+load_dotenv()
+bot = Bot(os.environ['BOT_TOKEN'])
 dp = Dispatcher()
 
 async def start_bot():
@@ -19,28 +26,21 @@ async def start_bot():
 
 @dp.message(F.text == "/start")
 async def start(message: Message):
-    print(message.from_user)
-    print(message.text)
+    print(f"{dt.now()}. {message.from_user.username}: {message.text}")
     ans_1 = await message.answer(f"Привет, {message.from_user.first_name}!")
     ans_2 = await message.answer(f"Напиши название города")
-    print(ans_1.text)
-    print(ans_2.text)
+    print(f"{dt.now()}. Bot: {ans_1.text}")
+    print(f"{dt.now()}. Bot: {ans_2.text}")
 
-@dp.message()
-async def send_weather(message: Message):
-    print(f"{dt.now()}\n"
-          f"{message.from_user.username}")
-    print(message.text)
+def get_weather(city):
     req = requests.get(f"https://api.openweathermap.org/data/2.5/weather?"
-                       f"q={message.text}"
+                       f"q={city}"
                        f"&lang=ru"
                        f"&units=metric"
-                       f"&appid={config.OPEN_WEATHER_API_KEY}"
+                       f"&appid={os.environ['OPEN_WEATHER_API_KEY']}"
                        )
     if req.status_code == 200:
         request_data = req.json()
-        # pprint(request_data)
-
         cur_city = request_data["name"]
         cur_temp = math.ceil(request_data["main"]["temp"])
         cur_humidity = request_data["main"]["humidity"]
@@ -59,67 +59,31 @@ async def send_weather(message: Message):
         cur_weather_capitalize = cur_weather.capitalize()
         cur_clouds = request_data["clouds"]["all"]
         weather_for_answer = (f"Текущая погода в городе {cur_city}:\n\n"
-                             f"{cur_weather_capitalize}. Облачность: {cur_clouds}%\n"
-                             f"Температура: {cur_temp} C°\n"
-                             f"Ощущается как {cur_feels_like} C°\n"
-                             f"Макс. температура: {cur_temp_max} C°\n"
-                             f"Мин. температура: {cur_temp_min} C°\n"
-                             f"Влажность: {cur_humidity}%\n"
-                             f"Давление {cur_pressure} мм.рт.ст.\n"
-                             f"Восход в {cur_sunrise}\n"
-                             f"Закат в {cur_sunset}\n"
-                             f"Продолжительность дня: {cur_day_len}\n\n"
-                             f"Скорость ветра {cur_wind_speed} м/с, порывы до {cur_wind_gust} м/с"
-                            )
-        ans = await message.answer(weather_for_answer)
-        print(ans.text)
+                              f"{cur_weather_capitalize}. Облачность: {cur_clouds}%\n"
+                              f"Температура: {cur_temp} C°\n"
+                              f"Ощущается как {cur_feels_like} C°\n"
+                              f"Макс. температура: {cur_temp_max} C°\n"
+                              f"Мин. температура: {cur_temp_min} C°\n"
+                              f"Влажность: {cur_humidity}%\n"
+                              f"Давление {cur_pressure} мм.рт.ст.\n"
+                              f"Восход в {cur_sunrise}\n"
+                              f"Закат в {cur_sunset}\n"
+                              f"Продолжительность дня: {cur_day_len}\n\n"
+                              f"Скорость ветра {cur_wind_speed} м/с, порывы до {cur_wind_gust} м/с"
+                              )
+        return weather_for_answer
     else:
-        ans = await message.answer(f"Неверный город")
-        print(ans.text)
+        weather_for_answer = "Неверный город"
+        return weather_for_answer
 
-# def get_weather(city, open_weather_api_key: config.OPEN_WEATHER_API_KEY):
-#     try:
-#         req = requests.get(f"https://api.openweathermap.org/data/2.5/weather?"
-#                            f"q={city}"
-#                            f"&lang=ru"
-#                            f"&units=metric"
-#                            f"&appid={open_weather_api_key}"
-#                            )
-#         request_data = req.json()
-#         # pprint(request_data)
-#
-#         cur_city = request_data["name"]
-#         cur_temp = math.ceil(request_data["main"]["temp"])
-#         cur_humidity = request_data["main"]["humidity"]
-#         cur_pressure = request_data["main"]["pressure"]
-#         cur_feels_like = math.ceil(request_data["main"]["feels_like"])
-#         cur_temp_max = math.ceil(request_data["main"]["temp_max"])
-#         cur_temp_min = math.ceil(request_data["main"]["temp_min"])
-#         cur_timestamp_sunrise = dt.fromtimestamp(request_data["sys"]["sunrise"])
-#         cur_timestamp_sunset = dt.fromtimestamp(request_data["sys"]["sunset"])
-#         cur_sunrise = dt.time(cur_timestamp_sunrise)
-#         cur_sunset = dt.time(cur_timestamp_sunset)
-#         cur_day_len = cur_timestamp_sunset - cur_timestamp_sunrise
-#
-#         print(f"Погода в городе {cur_city}\n"
-#               f"Текущая температура: {cur_temp}, ощущается как {cur_feels_like}\n"
-#               f"Макс. температура: {cur_temp_max}. Мин. температура: {cur_temp_min}\n"
-#               f"Текущая влажность: {cur_humidity}\n"
-#               f"Текущее давление {cur_pressure}\n"
-#               f"Восход в {cur_sunrise}\n"
-#               f"Закат в {cur_sunset}\n"
-#               f"Продолжительность дня: {cur_day_len}"
-#              )
-#
-#     except Exception as exc:
-#         print(exc)
-#         print("Неверное название города")
+@dp.message()
+async def send_weather(message: Message):
+    print(f"{dt.now()}. {message.from_user.username}: {message.text}")
+    ans = await message.answer(get_weather(message.text))
+    print(f"{dt.now()}. Bot: {ans.text}")
 
 def main():
     pass
-    # city = input("Введите город:\n")
-    # get_weather(city, config.OPEN_WEATHER_API_KEY)
 
 if __name__ == '__main__':
     asyncio.run(start_bot())
-    # main()
