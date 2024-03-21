@@ -19,15 +19,21 @@ async def start(msg: Message):
 
 @router.callback_query(F.data == "weather")
 async def choose_weather_period(callback: CallbackQuery, state: FSMContext):
-    # await state.set_state(Periods.weather_period)
-    await callback.message.answer(f"📅За какой период?", reply_markup=kb.weather_period)
+    await state.set_state(Periods.weather_period)
+    await callback.message.edit_text(f"📅За какой период?", reply_markup=kb.weather_period)
 
 
-# @router.message(Periods.weather_period)
+@router.message(Periods.weather_period)
 @router.callback_query(F.data == "today")
 async def input_city(callback: CallbackQuery, state: FSMContext):
     await state.set_state(Periods.current_day)
     await callback.message.edit_text(f"⬇️Напиши город:")
+
+
+@router.message(Periods.weather_period)
+@router.callback_query(F.data == "back_to_menu")
+async def back_from_weather_period(callback: CallbackQuery):
+    await callback.message.edit_text(f"📍Главное меню", reply_markup=kb.menu)
 
 
 @router.message(Periods.current_day)
@@ -38,10 +44,17 @@ async def send_weather_today(msg: Message):
     await asyncio.sleep(1.5)
     if ans is None:
         await msg_wait.edit_text(f"❗️Неверный город❗️", reply_markup=kb.try_again)
-    await msg_wait.edit_text(ans, reply_markup=kb.exit_to_menu)
+    else:
+        await msg_wait.edit_text(ans, reply_markup=kb.exit_to_menu)
 
 
 @router.message(Periods.current_day)
 @router.callback_query(F.data == "menu")
 async def back_to_menu(callback: CallbackQuery):
     await callback.message.answer(f"📍Главное меню", reply_markup=kb.menu)
+
+
+@router.message(Periods.current_day)
+@router.callback_query(F.data == "try_again")
+async def try_again(callback: CallbackQuery, state: FSMContext):
+    await input_city(callback, state)
