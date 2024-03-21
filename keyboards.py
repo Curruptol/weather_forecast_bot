@@ -8,7 +8,7 @@ from aiogram.types import (InlineKeyboardButton,
 
 menu = [
         [
-         InlineKeyboardButton(text="Узнать погоду", callback_data="weather")
+         InlineKeyboardButton(text="🌡️Узнать погоду", callback_data="weather")
         ]
        ]
 
