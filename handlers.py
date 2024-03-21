@@ -4,7 +4,6 @@ from aiogram.filters import Command
 from aiogram import flags
 from aiogram.fsm.context import FSMContext
 import keyboards as kb
-
 import weather
 from states import Periods
 
