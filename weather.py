@@ -30,8 +30,8 @@ def get_weather(city):
         cur_weather = request_data["weather"][0]["description"]
         cur_weather_capitalize = cur_weather.capitalize()
         cur_clouds = request_data["clouds"]["all"]
-        weather_for_answer = (f"☀️Текущая погода в городе {cur_city}:\n\n"
-                              f"{cur_weather_capitalize}. ☁️Облачность: {cur_clouds}%\n"
+        weather_for_answer = (f"☀️Текущая погода в городе {cur_city}: {cur_weather_capitalize}\n\n"
+                              f"☁️Облачность: {cur_clouds}%\n"
                               f"🌡️Температура: {cur_temp} C°\n"
                               f"Ощущается как {cur_feels_like} C°\n"
                               f"Макс. температура: {cur_temp_max} C°\n"
@@ -42,7 +42,7 @@ def get_weather(city):
                               f"🌄Закат в {cur_sunset}\n"
                               f"⏰Продолжительность дня: {cur_day_len}\n\n"
                               f"💨Скорость ветра {cur_wind_speed} м/с"
-                              f"{f', порывы до {cur_wind_gust} м / с' if cur_wind_gust is not None else ''}"
+                              f"{f', порывы до {cur_wind_gust} м/с' if cur_wind_gust is not None else ''}"
                               )
         return weather_for_answer
     else:

@@ -12,11 +12,13 @@ router = Router()
 
 
 @router.message(Command("start"))
-async def start(msg: Message):
+async def start(msg: Message, state: FSMContext):
+    await state.set_state(Periods.menu)
     await msg.answer(f"Привет, {msg.from_user.first_name}!👋🏻\n"
                      f"👀Выбери что ты хочешь:", reply_markup=kb.menu)
 
 
+@router.message(Periods.menu)
 @router.callback_query(F.data == "weather")
 async def choose_weather_period(callback: CallbackQuery, state: FSMContext):
     await state.set_state(Periods.weather_period)
@@ -50,7 +52,8 @@ async def send_weather_today(msg: Message):
 
 @router.message(Periods.current_day)
 @router.callback_query(F.data == "menu")
-async def back_to_menu(callback: CallbackQuery):
+async def back_to_menu(callback: CallbackQuery, state: FSMContext):
+    await state.set_state(Periods.menu)
     await callback.message.answer(f"📍Главное меню", reply_markup=kb.menu)
 
 
