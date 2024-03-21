@@ -46,5 +46,4 @@ def get_weather(city):
                               )
         return weather_for_answer
     else:
-        weather_for_answer = "❗️Неверный город❗️"
-        return weather_for_answer
+        return None

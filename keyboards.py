@@ -13,6 +13,8 @@ weather_period = [[InlineKeyboardButton(text="Сегодня", callback_data="to
 
 exit_to_menu = [[InlineKeyboardButton(text="◀️В меню", callback_data="menu")]]
 
+try_again = [[InlineKeyboardButton(text="↪️Попробовать снова", callback_data="try_again")]]
+
 # back_to_menu = InlineKeyboardMarkup(inline_keyboard=[
 #                                                      [
 #                                                       InlineKeyboardButton(text="◀️В меню", callback_data="menu")
@@ -30,3 +32,4 @@ exit_to_menu = [[InlineKeyboardButton(text="◀️В меню", callback_data="m
 menu = InlineKeyboardMarkup(inline_keyboard=menu)
 weather_period = InlineKeyboardMarkup(inline_keyboard=weather_period)
 exit_to_menu = InlineKeyboardMarkup(inline_keyboard=exit_to_menu)
+try_again = InlineKeyboardMarkup(inline_keyboard=try_again)

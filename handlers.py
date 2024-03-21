@@ -36,6 +36,8 @@ async def send_weather_today(msg: Message):
     ans = weather.get_weather(msg.text)
     msg_wait = await msg.answer(f"⏳Пожалуйста, подожди немного, сейчас я отправлю тебе погоду...")
     await asyncio.sleep(1.5)
+    if ans is None:
+        await msg_wait.edit_text(f"❗️Неверный город❗️", reply_markup=kb.try_again)
     await msg_wait.edit_text(ans, reply_markup=kb.exit_to_menu)
 
 
