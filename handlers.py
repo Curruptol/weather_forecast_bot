@@ -6,6 +6,7 @@ from aiogram.fsm.context import FSMContext
 import keyboards as kb
 import weather
 from states import Periods
+import asyncio
 
 router = Router()
 
@@ -20,10 +21,12 @@ async def start(msg: Message):
 
 
 @router.callback_query(F.data == "weather")
-async def choose_weather_period(callback: CallbackQuery):
+async def choose_weather_period(callback: CallbackQuery, state: FSMContext):
+    # await state.set_state(Periods.weather_period)
     await callback.message.answer(f"📅За какой период?", reply_markup=kb.weather_period)
 
 
+# @router.message(Periods.weather_period)
 @router.callback_query(F.data == "today")
 async def input_city(callback: CallbackQuery, state: FSMContext):
     await state.set_state(Periods.current_day)
@@ -35,4 +38,11 @@ async def input_city(callback: CallbackQuery, state: FSMContext):
 async def send_weather_today(msg: Message, state: FSMContext):
     ans = weather.get_weather(msg.text)
     msg_wait = await msg.answer(f"⏳Пожалуйста, подожди немного, сейчас я отправлю тебе погоду...")
-    await msg_wait.edit_text(ans)
+    await asyncio.sleep(1.5)
+    await msg_wait.edit_text(ans, reply_markup=kb.exit_to_menu)
+
+
+@router.message(Periods.current_day)
+@router.callback_query(F.data == "menu")
+async def back_to_menu(callback: CallbackQuery):
+    await callback.message.answer(f"📍Главное меню", reply_markup=kb.menu)
