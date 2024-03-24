@@ -1,9 +1,4 @@
-from aiogram.types import (InlineKeyboardButton,
-                           InlineKeyboardMarkup,
-                           KeyboardButton,
-                           ReplyKeyboardMarkup,
-                           ReplyKeyboardRemove
-                           )
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 menu = [[InlineKeyboardButton(text="🌡️Узнать погоду", callback_data="weather")]]
 

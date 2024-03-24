@@ -4,7 +4,7 @@ from aiogram.filters import Command
 from aiogram import flags
 from aiogram.fsm.context import FSMContext
 import keyboards as kb
-import weather
+import get_weather
 from states import Periods
 import asyncio
 
@@ -42,7 +42,7 @@ async def back_from_weather_period(callback: CallbackQuery, state: FSMContext):
 @router.message(Periods.current_day)
 @flags.chat_action("typing")
 async def send_weather_today(msg: Message, state: FSMContext):
-    ans = weather.get_weather(msg.text)
+    ans = get_weather.get_current_weather(msg.text)
     msg_wait = await msg.answer(f"⏳Пожалуйста, подожди немного, сейчас я отправлю тебе погоду...")
     await asyncio.sleep(1.5)
     if ans is None:
