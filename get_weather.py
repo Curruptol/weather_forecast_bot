@@ -18,23 +18,24 @@ def get_current_weather(city):
         request_data = req.json()
         current_weather = WeatherData(**request_data)
 
-        city = current_weather.name
-        temp = math.ceil(current_weather.main["temp"])
-        humidity = current_weather.main["humidity"]
-        pressure = math.ceil((current_weather.main["pressure"]) / 1.333)
-        feels_like = math.ceil(current_weather.main["feels_like"])
-        temp_max = math.ceil(current_weather.main["temp_max"])
-        temp_min = math.ceil(current_weather.main["temp_min"])
-        timestamp_sunrise = dt.fromtimestamp(current_weather.sys["sunrise"])
-        timestamp_sunset = dt.fromtimestamp(current_weather.sys["sunset"])
+        city = current_weather.get("name")
+        temp = math.ceil(current_weather.main.get("temp"))
+        humidity = current_weather.main.get("humidity")
+        pressure = math.ceil((current_weather.main.get("pressure")) / 1.333)
+        feels_like = math.ceil(current_weather.main.get("feels_like"))
+        temp_max = math.ceil(current_weather.main.get("temp_max"))
+        temp_min = math.ceil(current_weather.main.get("temp_min"))
+        timestamp_sunrise = dt.fromtimestamp(current_weather.sys.get("sunrise"))
+        timestamp_sunset = dt.fromtimestamp(current_weather.sys.get("sunset"))
         sunrise = dt.time(timestamp_sunrise)
         sunset = dt.time(timestamp_sunset)
         day_len = timestamp_sunset - timestamp_sunrise
-        wind_speed = current_weather.wind["speed"]
-        wind_gust = current_weather.wind["gust"] if "gust" in current_weather.wind else None
-        weather = current_weather.weather[0]["description"]
+        wind_speed = current_weather.wind.get("speed")
+        wind_gust = current_weather.wind.get("gust")
+        weather = current_weather.weather[0].get("description")
         weather_capitalize = weather.capitalize()
-        clouds = current_weather.clouds["all"]
+        clouds = current_weather.clouds.get("all")
+
         total_weather = (f"☀️Текущая погода в городе {city}: {weather_capitalize}\n\n"
                          f"☁️Облачность: {clouds}%\n"
                          f"🌡️Температура: {temp} C°\n"
