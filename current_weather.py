@@ -68,7 +68,6 @@ class WeatherData:
     weather: list[Weather]
     base: str
     main: Main
-    visibility: int
     wind: Wind
     clouds: Clouds
     dt: int
@@ -79,3 +78,4 @@ class WeatherData:
     cod: int
     rain: Optional[Rain] = None
     snow: Optional[Snow] = None
+    visibility: Optional[int] = None
