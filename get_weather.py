@@ -37,18 +37,16 @@ def get_current_weather(city):
 
         total_weather = (f"☀️Текущая погода в городе {city}: {weather_capitalize}\n\n"
                          f"☁️Облачность: {clouds}%\n"
-                         f"🌡️Температура: {temp} C°\n"
-                         f"Ощущается как {feels_like} C°\n"
-                         f"Макс. температура: {temp_max} C°\n"
-                         f"Мин. температура: {temp_min} C°\n"
+                         f"🌡️Температура: {temp} C°. Ощущается как {feels_like} C°\n"
+                         f"📈Макс. температура: {temp_max} C°\n"
+                         f"📉Мин. температура: {temp_min} C°\n"
                          f"💧Влажность: {humidity}%\n"
-                         f"Давление {pressure} мм.рт.ст.\n"
+                         f"🌀Давление {pressure} мм.рт.ст.\n"
                          f"🌅Восход в {sunrise}\n"
                          f"🌄Закат в {sunset}\n"
                          f"⏰Продолжительность дня: {day_len}\n\n"
                          f"💨Скорость ветра {wind_speed} м/с"
-                         f"{f', порывы до {wind_gust} м/с' if wind_gust is not None else ''}"
-                         )
+                         f"{f', порывы до {wind_gust} м/с' if wind_gust is not None else ''}")
         return total_weather
     else:
         return None

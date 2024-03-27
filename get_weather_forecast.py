@@ -21,23 +21,40 @@ def get_weather_forecast(city):
         request_data = req.json()
         weather_forecast = WeatherForecastData(**request_data)
 
-        city = weather_forecast.location.get("name") # город
-        date = weather_forecast.forecast.forecastday[1].get("date") # завтрашняя дата YYYY-MM-DD
-        max_temp = math.ceil(weather_forecast.forecast.forecastday[1].day.get("maxtemp_c")) # макс температура с точкой
-        min_temp = math.ceil(weather_forecast.forecast.forecastday[1].day.get("mintemp_c")) # мин температура с точкой
-        avg_temp = math.ceil(weather_forecast.forecast.forecastday[1].day.get("avgtemp_c")) # средняя температура с точкой
-        max_wind_speed = (weather_forecast.forecast.forecastday[1].day.get("maxwind_kph")) / 3.6 # макс скорость ветра м/с
-        precipitation = weather_forecast.forecast.forecastday[1].day.get("totalprecip_mm") # осадки мм
-        avg_humidity = weather_forecast.forecast.forecastday[1].day.get("avghumidity") # ср влажность %
-        chance_of_rain = weather_forecast.forecast.forecastday[1].day.get("daily_chance_of_rain") # вероятность дождя %
-        weather_condition = weather_forecast.forecast.forecastday[1].day.condition.get("text") # погодные условия
-        sunrise = weather_forecast.forecast.forecastday[1].astro.get("sunrise") # восход солнца XX:YY AM/PM
-        sunset = weather_forecast.forecast.forecastday[1].astro.get("sunset") # закат солнца XX:YY AM/PM
-        pressure = (weather_forecast.forecast.forecastday[1].hour[0].get("pressure_mb")) / 1.333 # среднее давление миллибары
-        cloud = weather_forecast.forecast.forecastday[1].hour[0].get("cloud") # средняя облачность %
-        gust = (weather_forecast.forecast.forecastday[1].hour[0].get("gust_kph")) / 3.6 # порывы ветра км/ч
+        city = weather_forecast.get("location").get("name")
+        date = weather_forecast.get("forecast").get("forecastday")[1].get("date")
+        date = dt.strptime(date, "%Y-%m-%d").strftime('%d.%m.%Y')
+        max_temp = math.ceil(weather_forecast.get("forecast").get("forecastday")[1].get("day").get("maxtemp_c"))
+        min_temp = math.ceil(weather_forecast.get("forecast").get("forecastday")[1].get("day").get("mintemp_c"))
+        avg_temp = math.ceil(weather_forecast.get("forecast").get("forecastday")[1].get("day").get("avgtemp_c"))
+        max_wind_speed = (weather_forecast.get("forecast").get("forecastday")[1].get("day").get("maxwind_kph")) / 3.6
+        max_wind_speed = round(max_wind_speed, 1)
+        precipitation = weather_forecast.get("forecast").get("forecastday")[1].get("day").get("totalprecip_mm")
+        avg_humidity = weather_forecast.get("forecast").get("forecastday")[1].get("day").get("avghumidity")
+        chance_of_rain = weather_forecast.get("forecast").get("forecastday")[1].get("day").get("daily_chance_of_rain")
+        weather_condition = weather_forecast.get("forecast").get("forecastday")[1].get("day").get("condition").get("text")
+        sunrise = weather_forecast.get("forecast").get("forecastday")[1].get("astro").get("sunrise")
+        sunrise = dt.strptime(sunrise, "%I:%M %p")
+        sunrise = dt.strftime(sunrise, "%H:%M")
+        sunset = weather_forecast.get("forecast").get("forecastday")[1].get("astro").get("sunset")
+        sunset = dt.strptime(sunset, "%I:%M %p")
+        sunset = dt.strftime(sunset, "%H:%M")
+        pressure = (weather_forecast.get("forecast").get("forecastday")[1].get("hour")[0].get("pressure_mb")) / 1.333
+        pressure = round(pressure)
+        cloud = weather_forecast.get("forecast").get("forecastday")[1].get("hour")[0].get("cloud")
+        gust = (weather_forecast.get("forecast").get("forecastday")[1].get("hour")[0].get("gust_kph")) / 3.6
+        gust = round(gust, 1)
 
-
-
-
-
+        total_weather_forecast = (f"☀️Погода на завтра {date} в городе {city}: {weather_condition}\n\n"
+                                  f"📈Макс/📉Мин температура: {max_temp}C° / {min_temp}C°\n"
+                                  f"🌡️Температура: {avg_temp}C°\n"
+                                  f"☁️Облачность: {cloud}%\n"
+                                  f"☔️Вероятность дождя: {chance_of_rain}%, осадки {precipitation} мм\n"
+                                  f"💧Влажность: {avg_humidity}%\n"
+                                  f"🌀Давление: {pressure} мм.рт.ст.\n"
+                                  f"🌅Восход в {sunrise}\n"
+                                  f"🌄Закат в {sunset}\n"
+                                  f"💨Скорость ветра до {max_wind_speed} м/с, порывы ветра до {gust} м/с")
+        return total_weather_forecast
+    else:
+        return None

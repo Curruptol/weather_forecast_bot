@@ -7,3 +7,5 @@ class Periods(StatesGroup):
     current_day = State()
     incorrect_city = State()
     weather_sent = State()
+    tomorrow = State()
+    incorrect_city_for_tomorrow = State()
