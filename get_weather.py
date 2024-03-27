@@ -10,8 +10,7 @@ def get_current_weather(city):
            f"q={city}"
            f"&lang=ru"
            f"&units=metric"
-           f"&appid={os.environ['OPEN_WEATHER_API_KEY']}"
-          )
+           f"&appid={os.environ['OPEN_WEATHER_API_KEY']}")
     req = requests.get(api)
 
     if req.status_code == 200:
