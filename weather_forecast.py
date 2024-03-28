@@ -223,7 +223,3 @@ class WeatherForecastData:
 
     def get(self, key):
         return self.__getattr__(key)
-
-
-# avg_temp = forecast_data.get("forecast").get("forecastday")[1].get("day").get("avgtemp_c")
-# print(avg_temp)

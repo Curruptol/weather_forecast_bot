@@ -9,3 +9,5 @@ class Periods(StatesGroup):
     weather_sent = State()
     tomorrow = State()
     incorrect_city_for_tomorrow = State()
+    three_days = State()
+    incorrect_city_for_3_days = State()
