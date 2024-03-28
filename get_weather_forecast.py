@@ -46,15 +46,18 @@ def get_weather_forecast(city):
         gust = round(gust, 1)
 
         total_weather_forecast = (f"☀️Погода на завтра {date} в городе {city}: {weather_condition}\n\n"
-                                  f"📈Макс/📉Мин температура: {max_temp}C° / {min_temp}C°\n"
+                                  f"📈Макс температура: {max_temp}C°\n"
+                                  f"📉Мин температура: {min_temp}C°\n"
                                   f"🌡️Температура: {avg_temp}C°\n"
                                   f"☁️Облачность: {cloud}%\n"
-                                  f"☔️Вероятность дождя: {chance_of_rain}%, осадки {precipitation} мм\n"
+                                  f"🌧️Вероятность дождя: {chance_of_rain}%\n"
+                                  f"☔️Осадки {precipitation} мм\n"
                                   f"💧Влажность: {avg_humidity}%\n"
                                   f"🌀Давление: {pressure} мм.рт.ст.\n"
                                   f"🌅Восход в {sunrise}\n"
                                   f"🌄Закат в {sunset}\n"
-                                  f"💨Скорость ветра до {max_wind_speed} м/с, порывы ветра до {gust} м/с")
+                                  f"💨Скорость ветра до {max_wind_speed} м/с\n"
+                                  f"💨Порывы ветра до {gust} м/с")
         return total_weather_forecast
     else:
         return None
