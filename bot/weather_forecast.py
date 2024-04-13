@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-import json
 
 
 @dataclass
@@ -13,10 +12,10 @@ class Location:
     localtime_epoch: int
     localtime: str
 
-    def __getattr__(self, key):
+    def __getattr__(self, key: object) -> object:
         return super().__getattribute__(key)
 
-    def get(self, key):
+    def get(self, key: object) -> object:
         return self.__getattr__(key)
 
 
@@ -26,10 +25,10 @@ class Condition:
     icon: str
     code: int
 
-    def __getattr__(self, key):
+    def __getattr__(self, key: object) -> object:
         return super().__getattribute__(key)
 
-    def get(self, key):
+    def get(self, key: object) -> object:
         return self.__getattr__(key)
 
 
@@ -59,10 +58,10 @@ class Current:
     gust_mph: float
     gust_kph: float
 
-    def __getattr__(self, key):
+    def __getattr__(self, key: object) -> object:
         return super().__getattribute__(key)
 
-    def get(self, key):
+    def get(self, key: object) -> object:
         return self.__getattr__(key)
 
 
@@ -72,10 +71,10 @@ class DayCondition:
     icon: str
     code: int
 
-    def __getattr__(self, key):
+    def __getattr__(self, key: object) -> object:
         return super().__getattribute__(key)
 
-    def get(self, key):
+    def get(self, key: object) -> object:
         return self.__getattr__(key)
 
 
@@ -102,10 +101,10 @@ class Day:
     condition: DayCondition
     uv: float
 
-    def __getattr__(self, key):
+    def __getattr__(self, key: object) -> object:
         return super().__getattribute__(key)
 
-    def get(self, key):
+    def get(self, key: object) -> object:
         return self.__getattr__(key)
 
 
@@ -120,10 +119,10 @@ class Astro:
     is_moon_up: int
     is_sun_up: int
 
-    def __getattr__(self, key):
+    def __getattr__(self, key: object) -> object:
         return super().__getattribute__(key)
 
-    def get(self, key):
+    def get(self, key: object) -> object:
         return self.__getattr__(key)
 
 
@@ -133,10 +132,10 @@ class HourCondition:
     icon: str
     code: int
 
-    def __getattr__(self, key):
+    def __getattr__(self, key: object) -> object:
         return super().__getattribute__(key)
 
-    def get(self, key):
+    def get(self, key: object) -> object:
         return self.__getattr__(key)
 
 
@@ -179,10 +178,10 @@ class Hour:
     short_rad: float
     diff_rad: float
 
-    def __getattr__(self, key):
+    def __getattr__(self, key: object) -> object:
         return super().__getattribute__(key)
 
-    def get(self, key):
+    def get(self, key: object) -> object:
         return self.__getattr__(key)
 
 
@@ -194,10 +193,10 @@ class Forecastday:
     astro: Astro
     hour: list[Hour]
 
-    def __getattr__(self, key):
+    def __getattr__(self, key: object) -> object:
         return super().__getattribute__(key)
 
-    def get(self, key):
+    def get(self, key: object) -> object:
         return self.__getattr__(key)
 
 
@@ -205,10 +204,10 @@ class Forecastday:
 class Forecast:
     forecastday: list[Forecastday]
 
-    def __getattr__(self, key):
+    def __getattr__(self, key: object) -> object:
         return super().__getattribute__(key)
 
-    def get(self, key):
+    def get(self, key: object) -> object:
         return self.__getattr__(key)
 
 
@@ -218,8 +217,8 @@ class WeatherForecastData:
     current: Current
     forecast: Forecast
 
-    def __getattr__(self, key):
+    def __getattr__(self, key: object) -> object:
         return super().__getattribute__(key)
 
-    def get(self, key):
+    def get(self, key: object) -> object:
         return self.__getattr__(key)

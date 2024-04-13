@@ -5,7 +5,7 @@ from datetime import datetime as dt
 from current_weather import WeatherData
 
 
-def get_current_weather(city):
+def get_current_weather(city: object) -> object:
     api = (f"https://api.openweathermap.org/data/2.5/weather?"
            f"q={city}"
            f"&lang=ru"

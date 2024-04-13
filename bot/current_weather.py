@@ -7,10 +7,10 @@ class Coord:
     lon: float
     lat: float
 
-    def __getattr__(self, key):
+    def __getattr__(self, key: object) -> object:
         return super().__getattribute__(key)
 
-    def get(self, key):
+    def get(self, key: object) -> object:
         return self.__getattr__(key)
 
 
@@ -21,10 +21,10 @@ class Weather:
     description: str
     icon: str
 
-    def __getattr__(self, key):
+    def __getattr__(self, key: object) -> object:
         return super().__getattribute__(key)
 
-    def get(self, key):
+    def get(self, key: object) -> object:
         return self.__getattr__(key)
 
 
@@ -39,10 +39,10 @@ class Main:
     sea_level: Optional[int] = None
     grnd_level: Optional[int] = None
 
-    def __getattr__(self, key):
+    def __getattr__(self, key: object) -> object:
         return super().__getattribute__(key)
 
-    def get(self, key):
+    def get(self, key: object) -> object:
         return self.__getattr__(key)
 
 
@@ -52,10 +52,10 @@ class Wind:
     deg: int
     gust: Optional[int] = None
 
-    def __getattr__(self, key):
+    def __getattr__(self, key: object) -> object:
         return super().__getattribute__(key)
 
-    def get(self, key):
+    def get(self, key: object) -> object:
         return self.__getattr__(key)
 
 
@@ -64,10 +64,10 @@ class Rain:
     one_hour: float = None
     three_hours: float = None
 
-    def __getattr__(self, key):
+    def __getattr__(self, key: object) -> object:
         return super().__getattribute__(key)
 
-    def get(self, key):
+    def get(self, key: object) -> object:
         return self.__getattr__(key)
 
 
@@ -76,10 +76,10 @@ class Snow:
     one_hour: float = None
     three_hours: float = None
 
-    def __getattr__(self, key):
+    def __getattr__(self, key: object) -> object:
         return super().__getattribute__(key)
 
-    def get(self, key):
+    def get(self, key: object) -> object:
         return self.__getattr__(key)
 
 
@@ -87,10 +87,10 @@ class Snow:
 class Clouds:
     all: int
 
-    def __getattr__(self, key):
+    def __getattr__(self, key: object) -> object:
         return super().__getattribute__(key)
 
-    def get(self, key):
+    def get(self, key: object) -> object:
         return self.__getattr__(key)
 
 
@@ -103,10 +103,10 @@ class Sys:
     sunset: int
     message: str = None
 
-    def __getattr__(self, key):
+    def __getattr__(self, key: object) -> object:
         return super().__getattribute__(key)
 
-    def get(self, key):
+    def get(self, key: object) -> object:
         return self.__getattr__(key)
 
 
@@ -128,8 +128,8 @@ class WeatherData:
     snow: Optional[Snow] = None
     visibility: Optional[int] = None
 
-    def __getattr__(self, key):
+    def __getattr__(self, key: object) -> object:
         return super().__getattribute__(key)
 
-    def get(self, key):
+    def get(self, key: object) -> object:
         return self.__getattr__(key)

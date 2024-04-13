@@ -5,7 +5,7 @@ from datetime import datetime as dt
 from weather_forecast import WeatherForecastData
 
 
-def get_weather_forecast(city, days: int):
+def get_weather_forecast(city: object, days: int) -> object:
     api = (f"https://api.weatherapi.com/v1/forecast.json?"
            f"q={city}"
            f"&days=3"
