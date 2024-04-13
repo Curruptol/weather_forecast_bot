@@ -1,6 +1,6 @@
 # weather_forecast_bot
 
-## Ссылка на телегарм бот
+## Ссылка на телеграм бот
 [WeatherForecastBot](https://t.me/test_weather_forecast_bot)
 
 ## Версии
