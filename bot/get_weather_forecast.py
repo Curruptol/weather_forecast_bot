@@ -7,10 +7,13 @@ from weather_forecast import WeatherForecastData
 
 def get_weather_forecast(city: str, days: int) -> str | None:
     """
+    используется get запрос api weatherapi, результирующий json десериализуется и
+    из значений объектов составляется текст прогноза погоды на завтра или на три дня
 
-    :param city:
-    :param days:
-    :return:
+    :param city: название города по-русски или по-ангийски
+    :param days: количество дней для прогноза. используется 2 или 3
+    :return: при статус коде 200 и кол-ве дней 2 - текст с прогнозом погоды на завтра. при статус коде 200
+    и кол-ве дней 3 - текст с прогнозом погоды на три дня. при статус коде != 200 - None
     """
     api = (f"https://api.weatherapi.com/v1/forecast.json?"
            f"q={city}"
@@ -21,16 +24,19 @@ def get_weather_forecast(city: str, days: int) -> str | None:
            f"&alerts=no"
            f"&tides=no"
            f"&key={os.environ['WEATHERAPI_API_KEY']}")
-    req = requests.get(api)
+    req = requests.get(api)  # get request
 
     if req.status_code == 200:
         if days == 2:
-            request_data = req.json()
-            weather_forecast = WeatherForecastData(**request_data)
+            request_data = req.json()  # сохраняем в json
+            weather_forecast = WeatherForecastData(**request_data)  # десериализуем
 
             city = weather_forecast.get("location").get("name")
 
+            # индекс 1 в листе для данных на завтрашний день
+
             date_1 = weather_forecast.get("forecast").get("forecastday")[1].get("date")
+            # преобразование timestamp в DD.MM.YYYY
             date_1 = dt.strptime(date_1, "%Y-%m-%d").strftime('%d.%m.%Y')
 
             max_temp_1 = weather_forecast.get("forecast").get("forecastday")[1].get("day").get("maxtemp_c")
@@ -43,7 +49,7 @@ def get_weather_forecast(city: str, days: int) -> str | None:
             avg_temp_1 = math.ceil(avg_temp_1)
 
             max_wind_speed_1 = weather_forecast.get("forecast").get("forecastday")[1].get("day").get("maxwind_kph")
-            max_wind_speed_1 = max_wind_speed_1 / 3.6
+            max_wind_speed_1 = max_wind_speed_1 / 3.6  # перевод в м/с
             max_wind_speed_1 = round(max_wind_speed_1, 1)
 
             precipitation_1 = weather_forecast.get("forecast").get("forecastday")[1].get("day").get("totalprecip_mm")
@@ -57,20 +63,26 @@ def get_weather_forecast(city: str, days: int) -> str | None:
                 "condition").get("text")
 
             sunrise_1 = weather_forecast.get("forecast").get("forecastday")[1].get("astro").get("sunrise")
+            # объект datetime формата %I(12 часовой формат):%M(минуты) %p(AM|PM) из строки
             sunrise_1 = dt.strptime(sunrise_1, "%I:%M %p")
+            # время в 24 часовом формате H:M
             sunrise_1 = dt.strftime(sunrise_1, "%H:%M")
 
             sunset_1 = weather_forecast.get("forecast").get("forecastday")[1].get("astro").get("sunset")
+            # объект datetime формата %I(12 часовой формат):%M(минуты) %p(AM|PM) из строки
             sunset_1 = dt.strptime(sunset_1, "%I:%M %p")
+            # время в 24 часовом формате H:M
             sunset_1 = dt.strftime(sunset_1, "%H:%M")
 
             pressure_1 = weather_forecast.get("forecast").get("forecastday")[1].get("hour")[0].get("pressure_mb")
+            # перевод в мм.рт.ст.
             pressure_1 = pressure_1 / 1.333
             pressure_1 = round(pressure_1)
 
             cloud_1 = weather_forecast.get("forecast").get("forecastday")[1].get("hour")[0].get("cloud")
 
             gust_1 = weather_forecast.get("forecast").get("forecastday")[1].get("hour")[0].get("gust_kph")
+            # перевод в м/с
             gust_1 = gust_1 / 3.6
             gust_1 = round(gust_1, 1)
 
@@ -89,12 +101,17 @@ def get_weather_forecast(city: str, days: int) -> str | None:
                                      f"💨Порывы ветра до {gust_1} м/с")
             return tomorrow_weather_forecast
         elif days == 3:
-            request_data = req.json()
-            weather_forecast = WeatherForecastData(**request_data)
+            request_data = req.json()  # сохраняем в json
+            weather_forecast = WeatherForecastData(**request_data)   # десериализуем
 
             city = weather_forecast.get("location").get("name")
 
+            # индекс 0 в листе - данные на сегодня
+            # индекс 1 - данные на завтра
+            # индекс 2 - данные на послезавтра
+
             date_0 = weather_forecast.get("forecast").get("forecastday")[0].get("date")
+            # дата в формате DD.MM.YYYY
             date_0 = dt.strptime(date_0, "%Y-%m-%d").strftime('%d.%m.%Y')
             date_1 = weather_forecast.get("forecast").get("forecastday")[1].get("date")
             date_1 = dt.strptime(date_1, "%Y-%m-%d").strftime('%d.%m.%Y')
@@ -123,6 +140,7 @@ def get_weather_forecast(city: str, days: int) -> str | None:
             avg_temp_2 = math.ceil(avg_temp_2)
 
             max_wind_speed_0 = weather_forecast.get("forecast").get("forecastday")[0].get("day").get("maxwind_kph")
+            # перевод в м/с
             max_wind_speed_0 = max_wind_speed_0 / 3.6
             max_wind_speed_0 = round(max_wind_speed_0, 1)
             max_wind_speed_1 = weather_forecast.get("forecast").get("forecastday")[1].get("day").get("maxwind_kph")
@@ -158,7 +176,9 @@ def get_weather_forecast(city: str, days: int) -> str | None:
                 "text")
 
             sunrise_0 = weather_forecast.get("forecast").get("forecastday")[0].get("astro").get("sunrise")
+            # объект datetime формата %I(12 часовой формат):%M(минуты) %p(AM|PM) из строки
             sunrise_0 = dt.strptime(sunrise_0, "%I:%M %p")
+            # время в 24 часовом формате H:M
             sunrise_0 = dt.strftime(sunrise_0, "%H:%M")
             sunrise_1 = weather_forecast.get("forecast").get("forecastday")[1].get("astro").get("sunrise")
             sunrise_1 = dt.strptime(sunrise_1, "%I:%M %p")
@@ -178,6 +198,7 @@ def get_weather_forecast(city: str, days: int) -> str | None:
             sunset_2 = dt.strftime(sunset_2, "%H:%M")
 
             pressure_0 = weather_forecast.get("forecast").get("forecastday")[0].get("hour")[0].get("pressure_mb")
+            # перевод в мм.рт.ст.
             pressure_0 = pressure_0 / 1.333
             pressure_0 = round(pressure_0)
             pressure_1 = weather_forecast.get("forecast").get("forecastday")[1].get("hour")[0].get("pressure_mb")
@@ -192,6 +213,7 @@ def get_weather_forecast(city: str, days: int) -> str | None:
             cloud_2 = weather_forecast.get("forecast").get("forecastday")[2].get("hour")[0].get("cloud")
 
             gust_0 = weather_forecast.get("forecast").get("forecastday")[0].get("hour")[0].get("gust_kph")
+            # перевод в м/с
             gust_0 = gust_0 / 3.6
             gust_0 = round(gust_0, 1)
             gust_1 = weather_forecast.get("forecast").get("forecastday")[1].get("hour")[0].get("gust_kph")
